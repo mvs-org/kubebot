@@ -14,5 +14,5 @@ RUN export COMMIT=$(git rev-parse --short HEAD) \
     go build -o kubebot_linux_amd64 
 FROM alpine
 
-COPY --from=builder kubebot_linux_amd64 /kubebot
+COPY --from=builder /src/kubebot_linux_amd64 /kubebot
 ENTRYPOINT [ "/kubebot" ]
