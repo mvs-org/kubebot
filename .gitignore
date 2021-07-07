@@ -1,0 +1,5 @@
+/bin
+/.vscode
+/kubebot.yaml
+/kubebot
+.DS_Store

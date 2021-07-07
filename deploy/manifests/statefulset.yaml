@@ -1,0 +1,110 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: kubebot
+spec:
+  serviceName: kubebot-headless
+  replicas: 1
+
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 20Gi
+
+  template:
+    spec:
+      serviceAccountName: kubebot
+      enableServiceLinks: false
+
+      volumes:
+        - name: snapshot
+          emptyDir: {}
+        - name: kubebot
+          emptyDir: {}
+        - name: config
+          configMap:
+            name: kubebot
+
+      initContainers:
+        - name: init-snapshot
+          image: viewfintest/snapshot-init-container
+          volumeMounts:
+            - name: data
+              mountPath: /data
+            - name: snapshot
+              mountPath: /snapshot
+
+        - name: init-kubebot
+          image: viewfintest/kubebot
+          volumeMounts:
+            - name: kubebot
+              mountPath: /volume
+          command:
+            - cp
+            - /kubebot
+            - /volume/kubebot
+
+      containers:
+        - name: node
+          image: viewfintest/hyperspace
+          volumeMounts:
+            - name: data
+              mountPath: /data
+            - name: kubebot
+              mountPath: /kubebot
+            - name: config
+              mountPath: /config
+
+          command:
+            - /kubebot/kubebot
+            - --config=/config/kubebot.yaml
+            - --watch-config
+
+          ports:
+            - name: rpc
+              containerPort: 9933
+            - name: ws
+              containerPort: 9944
+            - name: metrics
+              containerPort: 9615
+            - name: healthz
+              containerPort: 49944
+
+          startupProbe:
+            httpGet:
+              path: /healthz
+              port: healthz
+            failureThreshold: 30
+            periodSeconds: 10
+
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: healthz
+
+          # readinessProbe:
+          #   httpGet:
+          #     path: /readiness
+          #     port: healthz
+
+          resources:
+            requests:
+              cpu: 200m
+              memory: 500Mi
+            limits:
+              cpu: 500m
+              memory: 2Gi
+
+        - name: liveness-probe
+          image: viewfintest/node-liveness-probe
+          resources:
+            requests:
+              cpu: 50m
+              memory: 20Mi
+            limits:
+              cpu: 200m
+              memory: 50Mi

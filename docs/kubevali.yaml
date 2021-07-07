@@ -1,0 +1,98 @@
+#
+# Watchlog watches node logs and report the status extracted from logs
+# to healthchecks.io
+#
+watchlog:
+  # Whether enable watchlog or not, default: false
+  enabled: true
+
+  # `keyword` is expected appearing in node logs within `lastThreshold`.
+  # Otherwise node is considered as unhealthy.
+  keyword: "Prepared block"
+  lastThreshold: 60m
+
+  # The check ID of healthchecks.io. It is allowed to put multiple IDs here
+  # and kubebot uses the healthcheckIDs[.nodeTemplate.index].
+  healthcheckIDs:
+    - "..."
+
+#
+# Create (or update) a Kubernetes NodePort service when starting the chain node
+# to expose the P2P port of the Pod
+#
+# Currently the Pod name is extracted from $HOSTNAME and the Kubernetes Service
+# name would be the same as the Pod name
+#
+nodeService:
+  # Whether enable NodePort service or not, default: false
+  enabled: false
+
+  # Whether update the service even it is not created by kubebot, default: false
+  forceUpdate: false
+
+  # The template of Kubernetes Service fields
+  #  .spec.ports.[*].nodePort
+  #  .spec.ports.[*].targetPort
+  # Usually the same as `.nodeTemplate.args.port`
+  nodePortTemplate: '{{ template "nodePort" . }}'
+
+#
+# The common template for fields in `nodeTemplate`, default: ""
+# Can define complicated blocks and use them later in `nodeTemplate.*`
+#
+commonTemplate: |
+  {{- define "nodePort" -}}
+  {{ add 30333 .Index }}
+  {{- end -}}
+
+#
+# The node template to generate the final command-line arguments running the node
+# All fields in `nodeTemplate` will be rendered once kubebot launches
+#
+nodeTemplate:
+  # Index of the chain node to select `healthcheckIDs` and can be used in
+  # the following templates. This is usually dynamic and obtained from
+  # environment variables, default: '{{ env "HOSTNAME" | splitList "-" | mustLast }}'
+  #
+  # The default template extracts the Pod's ordinal index of StatefulSet in Kubernetes.
+  # See https://kubernetes.io/docs/tutorials/stateful-application/basic-stateful-set/#examining-the-pod-s-ordinal-index
+  index: '{{ env "HOSTNAME" | splitList "-" | mustLast }}'
+
+  # CLI command and following flags of chain node, requires >=1 item
+  command:
+    - hyperspace
+    - --validator
+    # ...
+
+  # Options that will be appended to `command`
+  args:
+    # Use node index defined in `index`.
+    # If `.nodeTemplate.index` == 2, this generates: --name '[KUBE-VALI] Development 02'
+    name: '[KUBE-VALI] Development {{ printf "%02d" .Index }}'
+
+    # Use the block defined in `.commonTemplate`.
+    # If `.nodeTemplate.index` == 2, this generates: --port 30335
+    port: '{{ template "nodePort" . }}'
+
+    # Normal option without any template.
+    out-peers: 30
+
+    # Use the helper function `{{ getRandomNodeIP }}`.
+    public-addr: '/ip4/{{ getRandomNodeIP }}/tcp/{{ template "nodePort" . }}'
+
+    # ...
+
+# Where the outputs of node being redirect to.
+# Can be either "stdout" or "stderr", default: "stdout"
+nodeStdout: stdout
+nodeStderr: stdout
+
+# The logging options, inherited from zap.
+# See https://pkg.go.dev/go.uber.org/zap#Config
+logging:
+  level: debug # See https://pkg.go.dev/go.uber.org/zap/zapcore#Level
+  encoding: json # Or console, see encoderConfig for more options.
+  outputPaths: [stderr]
+  errorOutputPaths: [stderr]
+  initialFields:
+    app: kubebot

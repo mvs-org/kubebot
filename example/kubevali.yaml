@@ -1,0 +1,12 @@
+commonTemplate: |
+  {{- define "nodePort" -}}
+  {{ add 30333 .Index }}
+  {{- end -}}
+
+nodeTemplate:
+  command:
+    - hyperspace
+
+  args:
+    name: '[KUBE-VALI] Example {{ printf "%02d" .Index }}'
+    port: '{{ template "nodePort" . }}'

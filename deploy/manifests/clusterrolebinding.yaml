@@ -1,0 +1,12 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: kubebot
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: kubebot
+subjects:
+  - kind: ServiceAccount
+    name: kubebot
+    # namespace: <PLACEHOLDER_FOR_KUSTOMIZATION>
