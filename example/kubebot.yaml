@@ -8,5 +8,5 @@ nodeTemplate:
     - hyperspace
 
   args:
-    name: '[KUBE-VALI] Example {{ printf "%02d" .Index }}'
+    name: '[KUBE-BOT] Example {{ printf "%02d" .Index }}'
     port: '{{ template "nodePort" . }}'
