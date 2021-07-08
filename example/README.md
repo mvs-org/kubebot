@@ -3,7 +3,7 @@
 This example deploys:
 
 - kubebot (this repo)
-- hyperspace node (<https:/https://github.com/mvs-org/metaverse-vm>)
+- hyperspace node (<https://github.com/mvs-org/metaverse-vm>)
 - node-liveness-probe (<https://github.com/mvs-org/node-liveness-probe>)
 
 The manifests are in [../deploy/manifests](../deploy/manifests/).

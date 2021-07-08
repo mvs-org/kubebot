@@ -62,7 +62,7 @@ nodeTemplate:
   command:
     - hyperspace
     - --validator
-    # ...
+    # base-path
 
   # Options that will be appended to `command`
   args:
