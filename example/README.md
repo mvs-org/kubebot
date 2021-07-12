@@ -15,3 +15,10 @@ cd example
 kustomize build . | kubectl diff -f -
 kustomize build . | kubectl apply -f -
 ```
+
+You can execute the following command to clean up that resource created above
+
+```bash
+kustomize build . | kubectl delete  -f -
+kubectl delete pvc data-kubebot-hyperspace-0
+```

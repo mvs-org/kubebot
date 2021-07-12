@@ -8,12 +8,12 @@ import (
 	"os"
 	"os/exec"
 
+	"github.com/fsnotify/fsnotify"
+	flags "github.com/jessevdk/go-flags"
 	"github.com/mvs-org/kubebot/config"
 	"github.com/mvs-org/kubebot/node"
 	"github.com/mvs-org/kubebot/nodesvc"
 	"github.com/mvs-org/kubebot/watchlog"
-	"github.com/fsnotify/fsnotify"
-	flags "github.com/jessevdk/go-flags"
 	"github.com/spf13/viper"
 )
 
@@ -59,14 +59,14 @@ func main() {
 
 		conf.Logger.Infof("kubebot %v-%v (built %v)", buildVersion, buildCommit, buildDate)
 
-		status := kubebot(conf, ctx)
+		status := kubebot(ctx, conf)
 		if !configChanged || status != 0 {
 			os.Exit(status)
 		}
 	}
 }
 
-func kubebot(conf *config.Config, ctx context.Context) int {
+func kubebot(ctx context.Context, conf *config.Config) int {
 	nodesvc.CreateOrUpdate(conf)
 
 	node := node.NewNode(conf)

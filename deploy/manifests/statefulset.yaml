@@ -5,21 +5,19 @@ metadata:
 spec:
   serviceName: kubebot-headless
   replicas: 1
-
   volumeClaimTemplates:
     - metadata:
         name: data
       spec:
-        accessModes: ["ReadWriteOnce"]
+        accessModes: [ "ReadWriteOnce" ]
+        storageClassName: "local-class"
         resources:
           requests:
             storage: 20Gi
-
   template:
     spec:
       serviceAccountName: kubebot
       enableServiceLinks: false
-
       volumes:
         - name: snapshot
           emptyDir: {}
@@ -37,7 +35,12 @@ spec:
               mountPath: /data
             - name: snapshot
               mountPath: /snapshot
-
+          env:
+#          need to complete these two parameters
+            - name: ARCHIVE_URL
+              value: http://exmaple.com/snapshot.tar.gz
+            - name: CHAIN_DB_PATH
+              value: /data/chains/hyperspace
         - name: init-kubebot
           image: viewfintest/kubebot
           volumeMounts:

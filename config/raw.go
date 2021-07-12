@@ -38,6 +38,7 @@ type RawNodeService struct {
 
 func Unmarshal() *Config {
 	raw := &RawConfig{}
+	//todo no need to check for error ？
 	viper.Unmarshal(raw)
 	validateOrDie(raw)
 	return renderOrDie(raw)
