@@ -18,7 +18,7 @@
 <!-- /TOC -->
 # 1. architecture
 
-![architecture.png](https://files.slack.com/files-pri/T01FTLT4KND-F027APWTZFC/architecture.png)
+![architecture.png](./docs/architecture.png)
 
 
 # 2. require
