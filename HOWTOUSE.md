@@ -13,7 +13,9 @@
   - [4.2. startup](#42-startup)
   - [4.3. storage](#43-storage)
   - [4.4. network](#44-network)
-- [4.5. Run](#45-run)
+- [5. Run](#5-run)
+- [6. Check](#6-check)
+- [7. Clean](#7-clean)
 
 <!-- /TOC -->
 # 1. architecture
@@ -117,7 +119,7 @@ VolumeClaimTemplates is defined in StatefulSet, volumeClaimTemplates will find t
 
 ClusterIp is defined in the service. Verify that the node is accessed through clusterIp
 
-# 4.5. Run
+# 5. Run
 
 You can refer to the README.md file in the example folder and run the following command:
 
@@ -127,4 +129,48 @@ cd example
 kustomize build . | kubectl diff -f -
 # Deploy resources into kubernates
 kustomize build . | kubectl apply -f -
+```
+
+# 6. Check
+
+You can execute the following command to check the created resources.If you want to query the specific reason for the failure, you can use the `kubectl describe $resource -n $namspace` command.
+
+```shell
+# check StatefulSet
+kubectl get sts  -n $namespace
+
+# check Pod
+kubectl get pod  -n $namespace
+
+# check StorageClass
+kubectl get StorageClass  -n $namespace
+
+# check pv
+kubectl get pv  -n $namespace
+
+# check pvc
+kubectl get pvc -n $namespace
+
+# check ServiceAccount
+kubectl get ServiceAccount -n $namespace
+
+# check ClusterRole
+kubectl get ClusterRole -n $namespace
+
+# check ClusterRoleBinding
+kubectl get ClusterRoleBinding -n $namespace
+
+# check service
+kubectl get service
+```
+
+# 7. Clean
+
+You can execute the following command to clean up resources
+
+```shell
+cd example
+kustomize build . | kubectl delete  -f -
+# because pvc is automatically generated, it needs to be cleaned up separately
+kubectl delete pvc data-kubebot-hyperspace-0
 ```
