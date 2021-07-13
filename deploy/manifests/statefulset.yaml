@@ -15,6 +15,9 @@ spec:
           requests:
             storage: 20Gi
   template:
+    metadata:
+      labels:
+        app: hyperspace
     spec:
       serviceAccountName: kubebot
       enableServiceLinks: false
@@ -29,7 +32,8 @@ spec:
 
       initContainers:
         - name: init-snapshot
-          image: viewfintest/snapshot-init-container
+          image: viewfintest/snapshot-init-container:v1
+          imagePullPolicy: Always
           volumeMounts:
             - name: data
               mountPath: /data
@@ -38,11 +42,12 @@ spec:
           env:
 #          need to complete these two parameters
             - name: ARCHIVE_URL
-              value: http://exmaple.com/snapshot.tar.gz
-            - name: CHAIN_DB_PATH
+              value: https://wallet.oracol.org/hyperspace.tar.gz
+            - name: CHAIN_DIR
               value: /data/chains/hyperspace
         - name: init-kubebot
           image: viewfintest/kubebot
+          imagePullPolicy: Always
           volumeMounts:
             - name: kubebot
               mountPath: /volume
@@ -54,6 +59,7 @@ spec:
       containers:
         - name: node
           image: viewfintest/hyperspace
+          imagePullPolicy: Always
           volumeMounts:
             - name: data
               mountPath: /data
@@ -104,6 +110,7 @@ spec:
 
         - name: liveness-probe
           image: viewfintest/node-liveness-probe
+          imagePullPolicy: Always
           resources:
             requests:
               cpu: 50m
@@ -111,3 +118,7 @@ spec:
             limits:
               cpu: 200m
               memory: 50Mi
+  selector:
+    matchLabels:
+      app: hyperspace
+

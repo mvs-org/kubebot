@@ -133,7 +133,7 @@ kustomize build . | kubectl apply -f -
 
 # 6. Check
 
-You can execute the following command to check the created resources.If you want to query the specific reason for the failure, you can use the `kubectl describe $resource -n $namspace` command.
+You can execute the following command to check the created resources.If you want to query the specific reason for the failure, you can use the `kubectl describe $resource -n $namspace` command. And if you want to query the log of a certain container, you can use the `kubectl logs -f   $podName -c $containerName` command
 
 ```shell
 # check StatefulSet
