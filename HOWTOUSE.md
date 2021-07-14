@@ -74,8 +74,8 @@ docker build -t viewfintest/kubebot .
 This is a real node that actually needs to run, and then the mirror only provides the environment needed for running. The actual running process is the binary file kuebot shared by `viewfintest/kubebot`. Kubebot can be considered as a wrapper for the operation of a hyperspace. Kubebot generates and runs hyperspace startup commands according to the configuration file, and processes logs. The following startup parameters are required.
 
 1. `config` : path to the config file
-2. `watch-config` : watch config file changes and restart node with new config
-3. `watch-config` : print the final rendered command line and exit(just to verify the configuration without any actual impact)
+2. `watch-config` : watch config file changes and restart node with new config.About the details of the configuration file, you can refer to this file [kubebot.yaml](./docs/kubebot.yaml)
+3. `dry-run` : print the final rendered command line and exit(just to verify the configuration without any actual impact)
 
 ```shell
 git clone https://github.com/inodelisia/metaverse-vm

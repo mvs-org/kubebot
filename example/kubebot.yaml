@@ -5,7 +5,7 @@ commonTemplate: |
 
 nodeTemplate:
   command:
-    - hyperspace
+    - metaverse
 
   args:
     name: '[KUBE-BOT] Example {{ printf "%02d" .Index }}'
