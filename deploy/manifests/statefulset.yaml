@@ -32,7 +32,7 @@ spec:
 
       initContainers:
         - name: init-snapshot
-          image: viewfintest/snapshot-init-container:v1
+          image: viewfintest/snapshot-init-container
           imagePullPolicy: Always
           volumeMounts:
             - name: data

@@ -14,7 +14,7 @@ images:
   - name: viewfintest/kubebot
   - name: viewfintest/hyperspace
   - name: viewfintest/node-liveness-probe
-  - name: viewfintest/snapshot-init-container:v1
+  - name: viewfintest/snapshot-init-container
 
 configMapGenerator:
   - name: kubebot
