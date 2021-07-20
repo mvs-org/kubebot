@@ -14,6 +14,10 @@
   - [4.3. storage](#43-storage)
   - [4.4. network](#44-network)
 - [5. Run](#5-run)
+  - [5.1. Prepare storage resources](#51-prepare-storage-resources)
+    - [5.1.1. Notice](#511-notice)
+    - [5.1.2. Nfs server installation](#512-nfs-server-installation)
+  - [5.2. Start Deploy](#52-start-deploy)
 - [6. Check](#6-check)
 - [7. Clean](#7-clean)
 
@@ -121,6 +125,28 @@ VolumeClaimTemplates is defined in StatefulSet, volumeClaimTemplates will find t
 ClusterIp is defined in the service. Verify that the node is accessed through clusterIp
 
 # 5. Run
+
+## 5.1. Prepare storage resources
+
+Before you run, you need to install nfs as the storage resource behind
+
+### 5.1.1. Notice
+
+Need to replace `{NFS_HOST_IP}` `{NFS_HOST_PATH}` in the [nfs-client-provisioner.yaml](deploy/manifests/nfs-client-provisioner.yaml) file with the actual address
+
+### 5.1.2. Nfs server installation
+
+About nfs server installation. You can refer to this link [https://vitux.com/install-nfs-server-and-client-on-ubuntu/](https://vitux.com/install-nfs-server-and-client-on-ubuntu/).It should be noted that the nfs client needs to be installed on each kubernates node.
+
+1. ubuntu
+   ```shell
+   sudo apt-get install nfs-common
+   ```
+2. centos
+   ```shell
+   sudo yum install nfs-utils
+   ```
+## 5.2. Start Deploy
 
 You can refer to the README.md file in the example folder and run the following command:
 
