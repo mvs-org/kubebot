@@ -2,4 +2,7 @@ apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
   name: nfs-storage
+# On macos, please set the mount parameter resvport. For specific reasons, please refer to https://apple.stackexchange.com/questions/142697/why-does-mounting-an-nfs-share-from-linux-require-the-use-of-a-privileged-port
+# mountOptions:
+#  - resvport
 provisioner: fuseim.pri/ifs
